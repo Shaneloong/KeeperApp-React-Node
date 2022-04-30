@@ -10,7 +10,7 @@ function Note(props) {
     <div className="note">
       <h1>{props.title}</h1>
       <p>{props.content}</p>
-      <button onClick={handleClick}>
+      <button style={{ borderRadius: "50%" }} onClick={handleClick}>
         <DeleteIcon />
       </button>
     </div>
