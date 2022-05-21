@@ -2,7 +2,9 @@ const bodyParser = require('body-parser');
 const path = require ('path');
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
+dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -11,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.resolve(__dirname, '../keeper-app/build')));
 
-mongoose.connect("mongodb+srv://admin-shane:sarangjiajing@cluster0.gwrin.mongodb.net/KeeperAppDB");
+mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gwrin.mongodb.net/KeeperAppDB`);
 
 const usersSchema = mongoose.Schema({
     username: String,
