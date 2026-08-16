@@ -5,15 +5,16 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "@material-ui/core": "4.12.4",
-    "@material-ui/icons": "4.11.3",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "3.2.0"
-  },
-  "devDependencies": {
-    "typescript": "3.3.3"
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.3.1",
+    "@mui/material": "^9.3.1",
+    "ajv": "^8.20.0",
+    "ajv-keywords": "^5.1.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-router-dom": "^7.18.2",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts --max_old_space_size=12000 start",
@@ -27,5 +28,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
 }

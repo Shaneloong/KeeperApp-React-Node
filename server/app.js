@@ -110,7 +110,7 @@ app.post("/create", function(req, res){
     })
 })
 
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
     res.sendFile(path.resolve(__dirname, '../keeper-app/build', 'index.html'));
 });
 

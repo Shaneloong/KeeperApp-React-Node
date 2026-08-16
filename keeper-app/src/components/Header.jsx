@@ -1,6 +1,6 @@
 import React from "react";
-import HighlightIcon from "@material-ui/icons/Highlight";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HighlightIcon from "@mui/icons-material/Highlight";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 function Header(props) {
   return (
