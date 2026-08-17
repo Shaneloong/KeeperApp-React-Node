@@ -6,6 +6,8 @@ import CreateArea from "./CreateArea";
 import Login from "./Login";
 import Register from "./Register";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+
 function App() {
   
   const [registerWanted, setRegisterWanted] = useState(false);
@@ -19,7 +21,7 @@ function App() {
 
   function registerAccount(credentials){
     console.log(credentials);
-    fetch('/register', {
+    fetch(`${API_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -35,7 +37,7 @@ function App() {
 
 
   function checkLogin(credentials){
-    fetch("/login", {
+    fetch(`${API_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -55,7 +57,7 @@ function App() {
   }
 
   function fetchNotes(userID){
-    fetch("/notes/" + userID)
+    fetch(`${API_URL}/notes/${userID}`)
         .then((res) => {
           return res.json();
         })
@@ -79,7 +81,7 @@ function App() {
   
   useEffect(() =>{
     if(currentUser !== "" && currentUser !== "undefined"){
-      fetch("/notes/" + currentUser)
+      fetch(`${API_URL}/notes/${currentUser}`)
       .then((res) => {
         return res.json();
       })
@@ -93,7 +95,7 @@ function App() {
   function addNote(newNote) {
     newNote.id = currentUser;
 
-    fetch("/create", {
+    fetch(`${API_URL}/create`, {
       method: 'POST',
       headers:{
         'Content-Type': 'application/json'
@@ -103,7 +105,7 @@ function App() {
     .then(response => response.json())
     .then(data => {
       if(data.success){
-        setTimeout(fetchNotes(currentUser), 3000);
+        fetchNotes(currentUser);
       }
 
     })
@@ -111,7 +113,7 @@ function App() {
 
   function deleteNote(id) {
 
-    fetch("/delete", {
+    fetch(`${API_URL}/delete`, {
       method: 'POST',
       headers:{
         'Content-Type': 'application/json'
@@ -121,7 +123,7 @@ function App() {
     .then(response => response.json())
     .then(data => {
       if(data.success){
-        setTimeout(fetchNotes(currentUser), 3000);
+        fetchNotes(currentUser);
       }
     })
     

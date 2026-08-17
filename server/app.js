@@ -1,19 +1,27 @@
 const bodyParser = require('body-parser');
-const path = require ('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.BACKEND_PORT || 5001;
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static(path.resolve(__dirname, '../keeper-app/build')));
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gwrin.mongodb.net/KeeperAppDB`);
+const mongoURI = process.env.MONGODB_URI || (
+    process.env.DB_USERNAME && process.env.DB_PASSWORD
+        ? `mongodb+srv://${process.env.DB_USERNAME}:${encodeURIComponent(process.env.DB_PASSWORD)}@cluster0.gwrin.mongodb.net/KeeperAppDB`
+        : 'mongodb://127.0.0.1:27017/KeeperAppDB'
+);
+
+mongoose.connect(mongoURI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch((err) => console.error('MongoDB connection error:', err));
 
 const usersSchema = mongoose.Schema({
     username: String,
@@ -23,7 +31,9 @@ const usersSchema = mongoose.Schema({
 
 const User = mongoose.model('User', usersSchema);
 
-
+app.get("/health", (req, res) => {
+    res.json({ status: "ok" });
+});
 
 app.post("/login", async function(req, res){
     const username = req.body.username;
@@ -119,11 +129,6 @@ app.post("/create", async function(req, res){
         res.status(500).json({success: false, error: err.message});
     }
 });
-
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../keeper-app/build', 'index.html'));
-});
-
 
 app.listen(PORT, function(){
     console.log("Server started on port " + PORT);
