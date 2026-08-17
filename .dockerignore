@@ -1,4 +1,5 @@
 node_modules
 keeper-app/node_modules
-keeper-app/build/
+keeper-app/build
+.git
 .env
