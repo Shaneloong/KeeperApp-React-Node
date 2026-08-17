@@ -1,0 +1,5 @@
+node_modules
+keeper-app/node_modules
+keeper-app/build
+.git
+.env

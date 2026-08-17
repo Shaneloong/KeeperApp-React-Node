@@ -5,18 +5,18 @@
   "main": "server/app.js",
   "scripts": {
     "start": "node server/app.js",
-    "build": "cd keeper-app && npm install && npm run build"
+    "build": "cd keeper-app && npm install --legacy-peer-deps && npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "16.9.1"
+    "node": ">=20.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.20.0",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.0",
-    "mongoose": "^6.3.1"
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.10.1"
   }
 }

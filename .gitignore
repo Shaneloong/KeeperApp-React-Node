@@ -1,2 +1,2 @@
-/node_modules
-.env
+keeper-app/node_modules
+keeper-app/build/
