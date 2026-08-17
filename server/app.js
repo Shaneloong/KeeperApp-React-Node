@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const aiClient = require('./aiClient');
 
 dotenv.config();
 const PORT = process.env.BACKEND_PORT || 5001;
@@ -99,9 +100,16 @@ app.post("/delete", async function(req, res){
         const foundItems = await User.findById(userID);
         console.log(foundItems.notes);
         if(foundItems.notes && foundItems.notes.length !== 0){
+            // Get the note ID before deleting to sync with AI service
+            const noteToDelete = foundItems.notes[noteIndex];
+            const noteIdString = noteToDelete._id ? noteToDelete._id.toString() : `${userID}_${noteIndex}`;
+
             foundItems.notes.splice(noteIndex, 1);
             await foundItems.save();
             res.json({success: true});
+
+            // Async sync with AI Vector DB
+            aiClient.deleteNote(noteIdString);
         } else {
             res.json({success: false});
         }
@@ -123,10 +131,45 @@ app.post("/create", async function(req, res){
     try {
         const foundItems = await User.findById(currentUser);
         foundItems.notes.push(newContent);
-        await foundItems.save();
+        const savedUser = await foundItems.save();
+
+        // Get the newly created note's ID
+        const newlyAddedNote = savedUser.notes[savedUser.notes.length - 1];
+        const noteIdString = newlyAddedNote._id ? newlyAddedNote._id.toString() : `${currentUser}_${savedUser.notes.length - 1}`;
+
         res.status(200).json({ success: true});
+
+        // Async sync with AI Vector DB
+        aiClient.ingestNote(currentUser, noteIdString, noteTitle, noteContent);
     } catch (err) {
         res.status(500).json({success: false, error: err.message});
+    }
+});
+
+
+
+// --- AI Routes ---
+app.post("/ai/search", async function(req, res){
+    const { userId, query } = req.body;
+    if (!userId || !query) return res.status(400).json({error: "Missing userId or query"});
+
+    try {
+        const results = await aiClient.searchNotes(userId, query);
+        res.json({ success: true, results });
+    } catch (err) {
+        res.status(500).json({success: false, error: "AI search failed"});
+    }
+});
+
+app.post("/ai/chat", async function(req, res){
+    const { userId, question } = req.body;
+    if (!userId || !question) return res.status(400).json({error: "Missing userId or question"});
+
+    try {
+        const answer = await aiClient.chatWithNotes(userId, question);
+        res.json({ success: true, answer });
+    } catch (err) {
+        res.status(500).json({success: false, error: "AI chat failed"});
     }
 });
 

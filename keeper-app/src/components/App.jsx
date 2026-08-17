@@ -5,6 +5,7 @@ import Note from "./Note";
 import CreateArea from "./CreateArea";
 import Login from "./Login";
 import Register from "./Register";
+import AIAssistant from "./AIAssistant";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
 
@@ -133,6 +134,7 @@ function App() {
       return (
         <div>
           <Header clicked={logout} isLoggedIn={currentUser}/>
+          <AIAssistant userId={currentUser} />
           <CreateArea id={currentUser} onAdd={addNote} />
           {notes.map((noteItem, index) => {
             return (
