@@ -13,7 +13,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.resolve(__dirname, '../keeper-app/build')));
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gwrin.mongodb.net/KeeperAppDB`);
+const dbUri = process.env.MONGO_URI || `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.gwrin.mongodb.net/KeeperAppDB`;
+mongoose.connect(dbUri);
 
 const usersSchema = mongoose.Schema({
     username: String,
