@@ -2,9 +2,9 @@
   "name": "shane-keeper",
   "version": "1.0.0",
   "description": "",
-  "main": "server/app.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server/app.js",
+    "start": "node server/server.js",
     "build": "cd keeper-app && npm install --legacy-peer-deps && npm run build"
   },
   "keywords": [],
@@ -14,10 +14,13 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
-    "body-parser": "^1.20.3",
-    "cors": "^2.8.6",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "mongoose": "^8.10.1"
+    "bcrypt": "~6.0.0",
+    "body-parser": "~1.20.3",
+    "cors": "~2.8.6",
+    "dotenv": "~16.4.7",
+    "express": "~4.21.2",
+    "jsonwebtoken": "~9.0.3",
+    "mongoose": "~8.10.1",
+    "socket.io": "~4.8.3"
   }
 }

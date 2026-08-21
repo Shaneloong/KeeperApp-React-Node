@@ -2,28 +2,23 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import Zoom from "@mui/material/Zoom";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 function CreateArea(props) {
-  const [isFocus, setFocus] = useState(false);
-
-  function FocusHandling() {
-    setFocus(true);
-  }
-
+  const [isExpanded, setExpanded] = useState(false);
   const [note, setNote] = useState({
     title: "",
     content: ""
   });
 
-  function handleChange(event) {
-    const { name, value } = event.target;
+  function handleTitleChange(event) {
+    const { value } = event.target;
+    setNote(prevNote => ({ ...prevNote, title: value }));
+  }
 
-    setNote((prevNote) => {
-      return {
-        ...prevNote,
-        [name]: value
-      };
-    });
+  function handleContentChange(content) {
+    setNote(prevNote => ({ ...prevNote, content: content }));
   }
 
   function submitNote(event) {
@@ -32,29 +27,44 @@ function CreateArea(props) {
       title: "",
       content: ""
     });
+    setExpanded(false);
     event.preventDefault();
+  }
+
+  function expand() {
+    setExpanded(true);
   }
 
   return (
     <div>
       <form className="create-note">
-        {isFocus && (
+        {isExpanded && (
           <input
             name="title"
-            onChange={handleChange}
+            onChange={handleTitleChange}
             value={note.title}
             placeholder="Title"
           />
         )}
-        <textarea
-          name="content"
-          onFocus={FocusHandling}
-          onChange={handleChange}
-          value={note.content}
-          placeholder="Take a note..."
-          rows={isFocus ? "3" : "1"}
-        />
-        <Zoom in={isFocus}>
+
+        <div onClick={expand} style={{ padding: '10px 15px' }}>
+          {isExpanded ? (
+            <ReactQuill
+               theme="snow"
+               value={note.content}
+               onChange={handleContentChange}
+               placeholder="Take a note..."
+            />
+          ) : (
+            <textarea
+               placeholder="Take a note..."
+               rows="1"
+               readOnly
+            />
+          )}
+        </div>
+
+        <Zoom in={isExpanded}>
           <Fab onClick={submitNote}>
             <AddIcon />
           </Fab>
