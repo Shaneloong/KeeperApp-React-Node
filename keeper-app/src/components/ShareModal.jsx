@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 function ShareModal({ noteId, token, onClose }) {
     const [username, setUsername] = useState('');

@@ -6,7 +6,7 @@ import CreateArea from "./CreateArea";
 import Login from "./Login";
 import Register from "./Register";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 function App() {
   const [registerWanted, setRegisterWanted] = useState(false);

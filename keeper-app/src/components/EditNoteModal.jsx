@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { io } from 'socket.io-client';
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 function EditNoteModal({ noteId, initialTitle, initialContent, token, onClose, onSave }) {
     const [title, setTitle] = useState(initialTitle);
