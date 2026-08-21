@@ -6,6 +6,9 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const User = require('./models/User');
+const Note = require('./models/Note');
+
 dotenv.config();
 const PORT = process.env.BACKEND_PORT || 5001;
 const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_here';
@@ -25,30 +28,6 @@ const mongoURI = process.env.MONGODB_URI || (
 mongoose.connect(mongoURI)
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('MongoDB connection error:', err));
-
-const usersSchema = mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
-});
-
-const User = mongoose.model('User', usersSchema);
-
-const noteSchema = mongoose.Schema({
-    title: { type: String, default: '' },
-    content: { type: String, default: '' },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    collaborators: [{
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        role: { type: String, enum: ['viewer', 'editor'] }
-    }],
-    versions: [{
-        content: String,
-        updatedAt: { type: Date, default: Date.now },
-        updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-    }]
-}, { timestamps: true });
-
-const Note = mongoose.model('Note', noteSchema);
 
 // Middleware for JWT Authentication
 const authenticateToken = (req, res, next) => {

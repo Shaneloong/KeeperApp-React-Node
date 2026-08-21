@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
+const User = require('./models/User');
+const Note = require('./models/Note');
 
 dotenv.config();
 
@@ -9,27 +11,6 @@ const mongoURI = process.env.MONGODB_URI || (
         ? `mongodb+srv://${process.env.DB_USERNAME}:${encodeURIComponent(process.env.DB_PASSWORD)}@cluster0.gwrin.mongodb.net/KeeperAppDB`
         : 'mongodb://127.0.0.1:27017/KeeperAppDB'
 );
-
-// Define Schemas
-const usersSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-});
-
-const noteSchema = new mongoose.Schema({
-    title: { type: String, default: '' },
-    content: { type: String, default: '' },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    collaborators: [{
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        role: { type: String, enum: ['viewer', 'editor'] }
-    }],
-    versions: [{
-        content: String,
-        updatedAt: { type: Date, default: Date.now },
-        updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
-    }]
-}, { timestamps: true });
 
 async function migrate() {
     try {
@@ -45,8 +26,6 @@ async function migrate() {
 
         // Use a different model name to avoid overwriting compiled models
         const OldUser = mongoose.models.OldUser || mongoose.model('OldUser', oldUserSchema, 'users');
-        const NewUser = mongoose.models.User || mongoose.model('User', usersSchema, 'users');
-        const Note = mongoose.models.Note || mongoose.model('Note', noteSchema, 'notes');
 
         const users = await OldUser.find({});
         console.log(`Found ${users.length} users to migrate.`);
@@ -61,7 +40,7 @@ async function migrate() {
             }
 
             // Update user password and remove 'notes' array field
-            await NewUser.updateOne(
+            await User.updateOne(
                 { _id: user._id },
                 { $set: { password: newPassword }, $unset: { notes: "" } }
             );
